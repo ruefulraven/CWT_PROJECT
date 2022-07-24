@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<AccountingLine id="572" index="1" op="C"
+	elementId="PNR-572">
+	<TypeIndicator>TYPE-01</TypeIndicator>
+	<FareApplication>ONE</FareApplication>
+	<FormOfPaymentCode>FormOfPaymentCode0</FormOfPaymentCode>
+	<LinkCode>01</LinkCode>
+	<AccountingVendorCode>ABC</AccountingVendorCode>
+	<ChargeCategoryCoded>TEST</ChargeCategoryCoded>
+	<AirlineDesignator>AA</AirlineDesignator>
+	<DocumentNumber>3889081143</DocumentNumber>
+	<CommissionPercentage>2</CommissionPercentage>
+	<CommissionAmount>2</CommissionAmount>
+	<BaseFare>1252.00</BaseFare>
+	<TaxPercentage>1</TaxPercentage>
+	<TaxAmount>201.38</TaxAmount>
+	<TaxSurchargeCode2>VAT</TaxSurchargeCode2>
+	<GSTCode>GST</GSTCode>
+	<GSTAmount>10</GSTAmount>
+	<GSTPercent>1</GSTPercent>
+	<QSTCode>QST</QSTCode>
+	<QSTAmount>10</QSTAmount>
+	<QSTPercent>1</QSTPercent>
+	<CreditCardNumber>123456789</CreditCardNumber>
+	<CreditCardCode>AX0</CreditCardCode>
+	<PassengerName>Thanos</PassengerName>
+	<NumberOfConjunctedDocuments>15-FEE-EXP$08</NumberOfConjunctedDocuments>
+	<NumberOfCoupons>1</NumberOfCoupons>
+	<OriginalTicketNumber>123456</OriginalTicketNumber>
+	<OriginalDateOfIssue>2021-01-28</OriginalDateOfIssue>
+	<OriginalPlaceOfIssue>MNL</OriginalPlaceOfIssue>
+	<FullPartialExchangeIndicator>PART</FullPartialExchangeIndicator>
+	<OriginalInvoice>00001</OriginalInvoice>
+	<TarriffBasis>TarriffBasis0</TarriffBasis>
+	<FreeFormText>HELLO WORLD</FreeFormText>
+	<CurrencyCode>USD</CurrencyCode>
+	<SegmentType>AIR</SegmentType>
+	<SegmentNumber>1</SegmentNumber>
+</AccountingLine>
