@@ -13,15 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gradle.cwt.dto.AccountingLineXYZ;
 import com.gradle.cwt.service.AccountingLineService;
 
-@RestController(value = "/AccountingLineAPI")
+@RestController()
+@RequestMapping(path = "CWT")
 public class AccountingLineController {
 
 	@Autowired
@@ -38,17 +39,10 @@ public class AccountingLineController {
 		
 		return response;
 	}
-	
-	@GetMapping("/retrieveAccountingLineAPI/{id}")
-	public ResponseEntity<?> retrieveAccountingLineAPI(@PathVariable Integer id){
-		return null;
 		
-	}
-	
 	@GetMapping("/retrieveAccountingLineAPI")
 	public ResponseEntity<?> retrieveAccountingLineAPITemp(){
 		return new ResponseEntity<>(service.accountingLineBuidler(), HttpStatus.OK);
-		
 	}
 	
 	public Map<String, String> validate(BindingResult bindingResult){

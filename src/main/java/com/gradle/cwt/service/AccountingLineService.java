@@ -20,8 +20,6 @@ public interface AccountingLineService {
 	
 	public Long parseLong(String values);
 	
-	//public Integer countDecimals(String number);
-	
 	public String formatValue(String number);
 	
 	public MonetaryAmount baseFare(AccountingLineXYZ xmlFile);

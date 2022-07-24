@@ -20,7 +20,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @XmlRootElement(name = "AccountingLine")
-//@JacksonXmlRootElement(localName = "AccountingLine")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -113,7 +112,6 @@ public class AccountingLineXYZ implements Serializable
     @JacksonXmlProperty(localName = "BaseFare")
 	@XmlElement(name = "BaseFare")
     protected String baseFare;
-	//@NotBlank(message = "Base Percent must not be empty")
     @JacksonXmlProperty(localName = "BasePercent")
     @XmlElement(name = "BasePercent")
     protected String basePercent;

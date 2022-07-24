@@ -20,65 +20,47 @@ import com.gradle.cwt.entity.MonetaryPercentage;
 public class AccountingLineServiceImpl implements AccountingLineService{
 	
 	@Override
-	public AccountingLine accountingLineBuidler() {
+	public AccountingLine accountingLineBuilder(AccountingLineXYZ accountingLineXYZ) {
 		AccountingLine accountingLine = null;
-		try {
-			File file = new File("src\\\\main\\\\resources\\\\AccountingLine.xml");
-			JAXBContext context = JAXBContext.newInstance(AccountingLineXYZ.class);
-			Unmarshaller unmarshaller = (Unmarshaller) context.createUnmarshaller();
-			AccountingLineXYZ xmlFile = (AccountingLineXYZ) unmarshaller.unmarshal(file);
-			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
-			xmlFile.setBaseFare(xmlFile.getBaseFare().replace("null", ""));
-			xmlFile.setTaxAmount(xmlFile.getTaxAmount().replace("null", ""));
-			xmlFile.setTaxAmount(xmlFile.getTaxAmount().replace("null", ""));
-			xmlFile.setGstAmount(xmlFile.getGstAmount().replace("null", ""));
-			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
-			xmlFile.setCommissionAmount(xmlFile.getCommissionAmount().replace("null", ""));
-			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
-			xmlFile.setCommissionPercentage(xmlFile.getCommissionPercentage().replace("null", ""));
-			MonetaryAmount qstAmount = qstAmount(xmlFile);
-			MonetaryAmount gstAmount = gstAmount(xmlFile);
-			MonetaryAmount totalTaxSurcharge = totalTaxSurcharge(qstAmount.getValue(), gstAmount.getValue());
-			MonetaryAmount baseFare = baseFare(xmlFile);
-			MonetaryAmount taxAmount = taxAmount(xmlFile);
-			MonetaryAmount totalTaxAmount = totalTaxAmount(xmlFile, totalTaxSurcharge);
-			MonetaryAmount commision = commision(xmlFile);
-			MonetaryPercentage commissionDetails = commissionDetails(xmlFile, commision);
-			AccountingLine accountingLineTemp = AccountingLine.builder()
-					.accountingLineID(xmlFile.getId())
-					.accountingLineStatus(AccountingLineStatus.ACTIVE)
-					.airlineCode(null)
-					.accountingVendorCode(xmlFile.getAccountingVendorCode())
-					.chargeCategoryCode(xmlFile.getChargeCategoryCoded())
-					.formattedReceiptNumber(null)
-					.invoiceNumber(xmlFile.getOriginalInvoice())
-					.linkCode(xmlFile.getLinkCode())
-					.numberOfConjunctedDocuments(countConjunctedDocuments(xmlFile.getNumberOfConjunctedDocuments()))
-					.originalTicketNumber(xmlFile.getOriginalTicketNumber())
-					.receiptNumber(xmlFile.getDocumentNumber())
-					.segmentRefIDList(refIDList(xmlFile.getSegmentType()))
-					.travelerName(xmlFile.getPassengerName())
-					.travelerRefIDList(refIDList("1"))
-					.typeIndicator(xmlFile.getTypeIndicator())
-					.elementNumber(xmlFile.getIndex().toString())
-					.fareApplication(xmlFile.getFareApplication())
-					.baseFare(baseFare)
-					.taxAmount(taxAmount)
-					.totalTaxAmount(totalTaxAmount)
-					.totalTaxSurcharge(totalTaxSurcharge)
-					.gstAmount(gstAmount)
-					.gstCode(xmlFile.getGstCode())
-					.qstAmount(qstAmount)
-					.qstCode(xmlFile.getQstCode())
-					.commission(commissionDetails)
-					.freeFormText(xmlFile.getFreeFormText())
-					.build();
-			
-			System.out.println(accountingLine);
-			accountingLine = accountingLineTemp;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		MonetaryAmount qstAmount = qstAmount(accountingLineXYZ);
+		MonetaryAmount gstAmount = gstAmount(accountingLineXYZ);
+		MonetaryAmount totalTaxSurcharge = totalTaxSurcharge(gstAmount.getValue(), qstAmount.getValue());
+		MonetaryAmount baseFare = baseFare(accountingLineXYZ);
+		MonetaryAmount taxAmount = taxAmount(accountingLineXYZ);
+		MonetaryAmount totalTaxAmount = totalTaxAmount(accountingLineXYZ, totalTaxSurcharge);
+		MonetaryAmount commision = commision(accountingLineXYZ);
+		MonetaryPercentage commissionDetails = commissionDetails(accountingLineXYZ, commision);
+		AccountingLine accountingLineTemp = AccountingLine.builder()
+				.accountingLineID(accountingLineXYZ.getId())
+				.accountingLineStatus(AccountingLineStatus.ACTIVE)
+				.airlineCode(null)
+				.accountingVendorCode(accountingLineXYZ.getAccountingVendorCode())
+				.chargeCategoryCode(accountingLineXYZ.getChargeCategoryCoded())
+				.formattedReceiptNumber(null)
+				.invoiceNumber(accountingLineXYZ.getOriginalInvoice())
+				.linkCode(accountingLineXYZ.getLinkCode())
+				.numberOfConjunctedDocuments(countConjunctedDocuments(accountingLineXYZ.getNumberOfConjunctedDocuments()))
+				.originalTicketNumber(accountingLineXYZ.getOriginalTicketNumber())
+				.receiptNumber(accountingLineXYZ.getDocumentNumber())
+				.segmentRefIDList(refIDList(accountingLineXYZ.getSegmentNumber()))
+				.travelerName(accountingLineXYZ.getPassengerName())
+				.travelerRefIDList(refIDList("1"))
+				.typeIndicator(accountingLineXYZ.getTypeIndicator())
+				.elementNumber(accountingLineXYZ.getIndex().toString())
+				.fareApplication(accountingLineXYZ.getFareApplication())
+				.baseFare(baseFare)
+				.taxAmount(taxAmount)
+				.totalTaxAmount(totalTaxAmount)
+				.totalTaxSurcharge(totalTaxSurcharge)
+				.gstAmount(gstAmount)
+				.gstCode(accountingLineXYZ.getGstCode())
+				.qstAmount(qstAmount)
+				.qstCode(accountingLineXYZ.getQstCode())
+				.commission(commissionDetails)
+				.freeFormText(accountingLineXYZ.getFreeFormText())
+				.build();
+		
+		accountingLine = accountingLineTemp;
 		return accountingLine;
 	}
 
@@ -89,7 +71,8 @@ public class AccountingLineServiceImpl implements AccountingLineService{
 		for(char letter: documentCharacters) {
 			count = (letter == '-') ? count+1 : count;
 		}
-		return Integer.toString(count);
+		String countOfDocuments = Integer.toString(count);
+		return countOfDocuments;
 	}
 
 	@Override
@@ -174,59 +157,73 @@ public class AccountingLineServiceImpl implements AccountingLineService{
 	@Override
 	public MonetaryPercentage commissionDetails(AccountingLineXYZ xmlFile, MonetaryAmount commision) {
 		BigDecimal percent = BigDecimal.valueOf(parseLong(xmlFile.getCommissionPercentage()));
-		//Formula : P% * X = Y
-		double finalPercentage = (percent.doubleValue()/100) * commision.getValue();
 		MonetaryPercentage commissionDetails = MonetaryPercentage.builder()
 				.amount(commision)
-				.percentage(BigDecimal.valueOf(finalPercentage))
+				.percentage(percent)
 				.build();
 		return commissionDetails;
 	}
-
+	
+	//For JUnit purposes
 	@Override
-	public AccountingLine accountingLineBuilder(AccountingLineXYZ accountingLineXYZ) {
+	public AccountingLine accountingLineBuidler() {
 		AccountingLine accountingLine = null;
-		MonetaryAmount qstAmount = qstAmount(accountingLineXYZ);
-		MonetaryAmount gstAmount = gstAmount(accountingLineXYZ);
-		MonetaryAmount totalTaxSurcharge = totalTaxSurcharge(gstAmount.getValue(), qstAmount.getValue());
-		MonetaryAmount baseFare = baseFare(accountingLineXYZ);
-		MonetaryAmount taxAmount = taxAmount(accountingLineXYZ);
-		MonetaryAmount totalTaxAmount = totalTaxAmount(accountingLineXYZ, totalTaxSurcharge);
-		MonetaryAmount commision = commision(accountingLineXYZ);
-		MonetaryPercentage commissionDetails = commissionDetails(accountingLineXYZ, commision);
-		AccountingLine accountingLineTemp = AccountingLine.builder()
-				.accountingLineID(accountingLineXYZ.getId())
-				.accountingLineStatus(AccountingLineStatus.ACTIVE)
-				.airlineCode(null)
-				.accountingVendorCode(accountingLineXYZ.getAccountingVendorCode())
-				.chargeCategoryCode(accountingLineXYZ.getChargeCategoryCoded())
-				.formattedReceiptNumber(null)
-				.invoiceNumber(accountingLineXYZ.getOriginalInvoice())
-				.linkCode(accountingLineXYZ.getLinkCode())
-				.numberOfConjunctedDocuments(countConjunctedDocuments(accountingLineXYZ.getNumberOfConjunctedDocuments()))
-				.originalTicketNumber(accountingLineXYZ.getOriginalTicketNumber())
-				.receiptNumber(accountingLineXYZ.getDocumentNumber())
-				.segmentRefIDList(refIDList(accountingLineXYZ.getSegmentType()))
-				.travelerName(accountingLineXYZ.getPassengerName())
-				.travelerRefIDList(refIDList("1"))
-				.typeIndicator(accountingLineXYZ.getTypeIndicator())
-				.elementNumber(accountingLineXYZ.getIndex().toString())
-				.fareApplication(accountingLineXYZ.getFareApplication())
-				.baseFare(baseFare)
-				.taxAmount(taxAmount)
-				.totalTaxAmount(totalTaxAmount)
-				.totalTaxSurcharge(totalTaxSurcharge)
-				.gstAmount(gstAmount)
-				.gstCode(accountingLineXYZ.getGstCode())
-				.qstAmount(qstAmount)
-				.qstCode(accountingLineXYZ.getQstCode())
-				.commission(commissionDetails)
-				.freeFormText(accountingLineXYZ.getFreeFormText())
-				.build();
-		
-		System.out.println(accountingLine);
-		accountingLine = accountingLineTemp;
+		try {
+			File file = new File("src\\\\main\\\\resources\\\\AccountingLine.xml");
+			JAXBContext context = JAXBContext.newInstance(AccountingLineXYZ.class);
+			Unmarshaller unmarshaller = (Unmarshaller) context.createUnmarshaller();
+			AccountingLineXYZ xmlFile = (AccountingLineXYZ) unmarshaller.unmarshal(file);
+			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
+			xmlFile.setBaseFare(xmlFile.getBaseFare().replace("null", ""));
+			xmlFile.setTaxAmount(xmlFile.getTaxAmount().replace("null", ""));
+			xmlFile.setTaxAmount(xmlFile.getTaxAmount().replace("null", ""));
+			xmlFile.setGstAmount(xmlFile.getGstAmount().replace("null", ""));
+			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
+			xmlFile.setCommissionAmount(xmlFile.getCommissionAmount().replace("null", ""));
+			xmlFile.setQstAmount(xmlFile.getQstAmount().replace("null", ""));
+			xmlFile.setCommissionPercentage(xmlFile.getCommissionPercentage().replace("null", ""));
+			MonetaryAmount qstAmount = qstAmount(xmlFile);
+			MonetaryAmount gstAmount = gstAmount(xmlFile);
+			MonetaryAmount totalTaxSurcharge = totalTaxSurcharge(qstAmount.getValue(), gstAmount.getValue());
+			MonetaryAmount baseFare = baseFare(xmlFile);
+			MonetaryAmount taxAmount = taxAmount(xmlFile);
+			MonetaryAmount totalTaxAmount = totalTaxAmount(xmlFile, totalTaxSurcharge);
+			MonetaryAmount commision = commision(xmlFile);
+			MonetaryPercentage commissionDetails = commissionDetails(xmlFile, commision);
+			AccountingLine accountingLineTemp = AccountingLine.builder()
+					.accountingLineID(xmlFile.getId())
+					.accountingLineStatus(AccountingLineStatus.ACTIVE)
+					.airlineCode(null)
+					.accountingVendorCode(xmlFile.getAccountingVendorCode())
+					.chargeCategoryCode(xmlFile.getChargeCategoryCoded())
+					.formattedReceiptNumber(null)
+					.invoiceNumber(xmlFile.getOriginalInvoice())
+					.linkCode(xmlFile.getLinkCode())
+					.numberOfConjunctedDocuments(countConjunctedDocuments(xmlFile.getNumberOfConjunctedDocuments()))
+					.originalTicketNumber(xmlFile.getOriginalTicketNumber())
+					.receiptNumber(xmlFile.getDocumentNumber())
+					.segmentRefIDList(refIDList(xmlFile.getSegmentNumber()))
+					.travelerName(xmlFile.getPassengerName())
+					.travelerRefIDList(refIDList("1"))
+					.typeIndicator(xmlFile.getTypeIndicator())
+					.elementNumber(xmlFile.getIndex().toString())
+					.fareApplication(xmlFile.getFareApplication())
+					.baseFare(baseFare)
+					.taxAmount(taxAmount)
+					.totalTaxAmount(totalTaxAmount)
+					.totalTaxSurcharge(totalTaxSurcharge)
+					.gstAmount(gstAmount)
+					.gstCode(xmlFile.getGstCode())
+					.qstAmount(qstAmount)
+					.qstCode(xmlFile.getQstCode())
+					.commission(commissionDetails)
+					.freeFormText(xmlFile.getFreeFormText())
+					.build();
+			
+			accountingLine = accountingLineTemp;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return accountingLine;
 	}
-
 }
