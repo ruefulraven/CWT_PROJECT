@@ -1,7 +1,6 @@
 package com.gradle.cwt.dto;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.gradle.cwt.utility.NotNumber;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +10,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 import java.io.Serializable;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -96,7 +97,6 @@ public class AccountingLineXYZ implements Serializable
     protected String airlineDesignator;
 	@XmlElement(name = "DocumentNumber")
 	@NotBlank(message = "Document Number must not be empty")
-	@NotNumber
     @JacksonXmlProperty(localName = "DocumentNumber")
     protected String documentNumber;
 	@NotBlank(message = "Commision Percentage must not be empty")
@@ -107,7 +107,6 @@ public class AccountingLineXYZ implements Serializable
     @JacksonXmlProperty(localName = "CommissionAmount")
 	@XmlElement(name = "CommissionAmount")
     protected String commissionAmount;
-	@NotNumber
 	@NotBlank(message = "Base Fare must not be empty")
     @JacksonXmlProperty(localName = "BaseFare")
 	@XmlElement(name = "BaseFare")
@@ -119,7 +118,6 @@ public class AccountingLineXYZ implements Serializable
 	@NotBlank(message = "Tax Percentage must not be empty")
     @JacksonXmlProperty(localName = "TaxPercentage")
     protected String taxPercentage;
-	@NotNumber
 	@NotBlank(message = "Tax Amount must not be empty")
     @JacksonXmlProperty(localName = "TaxAmount")
 	@XmlElement(name = "TaxAmount")
@@ -131,7 +129,6 @@ public class AccountingLineXYZ implements Serializable
     @NotBlank(message = "GST Code must not be empty")
     @JacksonXmlProperty(localName = "GSTCode")
     protected String gstCode;
-    @NotNumber
     @NotBlank(message = "GST Amount must not be empty")
     @JacksonXmlProperty(localName = "GSTAmount")
     @XmlElement(name = "GSTAmount")
@@ -144,7 +141,6 @@ public class AccountingLineXYZ implements Serializable
     @NotBlank(message = "QST Code must not be empty")
     @JacksonXmlProperty(localName = "QSTCode")
     protected String qstCode;
-    @NotNumber
     @NotBlank(message = "QST Amount must not be empty")
     @XmlElement(name = "QSTAmount")
     @JacksonXmlProperty(localName = "QSTAmount")
@@ -174,7 +170,6 @@ public class AccountingLineXYZ implements Serializable
     @JacksonXmlProperty(localName = "NumberOfCoupons")
     protected String numberOfCoupons;
     @XmlElement(name = "OriginalTicketNumber")
-    @NotNumber
     @NotBlank(message = "Original ticket number must not be empty")
     @JacksonXmlProperty(localName = "OriginalTicketNumber")
     protected String originalTicketNumber;
@@ -223,4 +218,7 @@ public class AccountingLineXYZ implements Serializable
     @NotBlank(message = "Element id must not be empty")
     @XmlAttribute(name = "elementId")
     protected String elementId;
+    
+    protected Map<String, String> errors;
+    
 }

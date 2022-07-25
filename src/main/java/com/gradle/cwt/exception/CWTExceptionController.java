@@ -25,6 +25,6 @@ public class CWTExceptionController {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> generalExceptionHandler(Exception e){
 		generalExceptionProperty = environment.getProperty("GENERAL.EXCEPTION_MESSAGE");
-		return new ResponseEntity<>(generalExceptionProperty, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(generalExceptionProperty, HttpStatus.BAD_REQUEST);
 	}
 }

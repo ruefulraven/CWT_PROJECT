@@ -58,6 +58,7 @@ public class AccountingLineServiceImpl implements AccountingLineService{
 				.qstCode(accountingLineXYZ.getQstCode())
 				.commission(commissionDetails)
 				.freeFormText(accountingLineXYZ.getFreeFormText())
+				.errors(accountingLineXYZ.getErrors())
 				.build();
 		
 		accountingLine = accountingLineTemp;
@@ -98,6 +99,7 @@ public class AccountingLineServiceImpl implements AccountingLineService{
 
 	@Override
 	public MonetaryAmount qstAmount(AccountingLineXYZ xmlFile) {
+		
 		MonetaryAmount monetary = MonetaryAmount.builder()
 				.value(parseLong(xmlFile.getQstAmount()))
 				.build();
